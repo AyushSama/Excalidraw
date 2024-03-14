@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Stage, Layer, Line, Group } from 'react-konva';
+import Navbar from './Navbar';
 
 function Canvas() {
   const [lines, setLines] = useState([]);
@@ -24,6 +25,8 @@ function Canvas() {
   };
 
   return (
+    <>
+    <Navbar/>
     <Stage
       width={window.innerWidth}
       height={window.innerHeight}
@@ -46,6 +49,7 @@ function Canvas() {
         ))}
       </Layer>
     </Stage>
+    </>
   );
 }
 
