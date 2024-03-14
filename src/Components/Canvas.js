@@ -1,5 +1,5 @@
-import React , {useState} from 'react'
-import {Stage, Layer, Line} from 'react-konva';
+import React, { useState } from 'react';
+import { Stage, Layer, Line, Group } from 'react-konva';
 
 function Canvas() {
   const [lines, setLines] = useState([]);
@@ -33,15 +33,16 @@ function Canvas() {
     >
       <Layer>
         {lines.map((line, i) => (
-          <Line
-            key={i}
-            points={line.points}
-            stroke="black"
-            strokeWidth={5}
-            tension={0.5}
-            lineCap="round"
-            globalCompositeOperation="source-over"
-          />
+          <Group key={i} draggable>
+            <Line
+              points={line.points}
+              stroke="black"
+              strokeWidth={5}
+              tension={0.5}
+              lineCap="round"
+              globalCompositeOperation="source-over"
+            />
+          </Group>
         ))}
       </Layer>
     </Stage>
