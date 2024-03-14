@@ -1,4 +1,5 @@
-import React from 'react'
+import React , {useState} from 'react'
+import {Stage, Layer, Line} from 'react-konva';
 
 function Canvas() {
   const [lines, setLines] = useState([]);
