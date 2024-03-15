@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stage, Layer, Line, Group } from 'react-konva';
 import Menu from './Menu';
+import { useShapeContext } from '../Context/ShapeContext';
 
 function Canvas() {
+
+  const {currentShape} = useShapeContext();
+
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -23,6 +27,10 @@ function Canvas() {
   const handleMouseUp = () => {
     setIsDrawing(false);
   };
+
+  useEffect(()=>{
+    console.log(currentShape)
+  },[currentShape])
 
   return (
     <>
