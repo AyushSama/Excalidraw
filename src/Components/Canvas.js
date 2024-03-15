@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stage, Layer, Line, Group } from 'react-konva';
-import Navbar from './Navbar';
+import Menu from './Menu';
 
 function Canvas() {
   const [lines, setLines] = useState([]);
@@ -26,7 +26,7 @@ function Canvas() {
 
   return (
     <>
-    <Navbar/>
+    <Menu/>
     <Stage
       width={window.innerWidth}
       height={window.innerHeight}
@@ -39,9 +39,9 @@ function Canvas() {
           <Group key={i} draggable>
             <Line
               points={line.points}
-              stroke="black"
-              strokeWidth={5}
-              tension={0.5}
+              stroke="black" // Add color here
+              strokeWidth={5} 
+              tension={0.5} 
               lineCap="round"
               globalCompositeOperation="source-over"
             />
