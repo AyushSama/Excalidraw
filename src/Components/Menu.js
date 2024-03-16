@@ -3,10 +3,10 @@ import Dropdown from './Dropdown'
 import Navbar from './Navbar'
 import Library from './Library'
 
-function Menu() {
+function Menu(props) {
     return (
         <div class="d-flex justify-content-between" style={{ marginTop: '17px' }}>
-        <Dropdown/>
+        <Dropdown stageRef={props.stageRef}/>
         <Navbar/>
         <Library/>
         </div>

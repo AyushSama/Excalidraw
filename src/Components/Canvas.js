@@ -4,6 +4,9 @@ import Menu from './Menu';
 import { useActionContext } from '../Context/ActionContext';
 
 function Canvas() {
+
+  const stageRef = useRef();
+
   const { currentAction } = useActionContext();
   const transformerRef = useRef();
   const [lines, setLines] = useState([]);
@@ -55,8 +58,8 @@ function Canvas() {
 
   return (
     <>
-      <Menu />
-      <Stage
+      <Menu stageRef={stageRef} />
+      <Stage ref={stageRef}
         width={window.innerWidth}
         height={window.innerHeight}
         onMouseDown={handleMouseDown}
