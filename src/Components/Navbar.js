@@ -1,5 +1,5 @@
 import React from 'react'
-import { useShapeContext } from '../Context/ShapeContext'
+import { useActionContext } from '../Context/ActionContext'
 import {ReactComponent as Lock }  from '../Logo/Navbar/lock.svg'
 import {ReactComponent as Unlock }  from '../Logo/Navbar/unlock.svg'
 import {ReactComponent as Pan }  from '../Logo/Navbar/hand-index.svg'
@@ -17,22 +17,22 @@ import {ReactComponent as Tools }  from '../Logo/Navbar/gear.svg'
 
 function Navbar() {
 
-  const {changeShape} = useShapeContext();
+  const {changeAction} = useActionContext();
 
   return (
     <div class="d-flex justify-content-center">
         <button type="button" class="btn btn-light"><Lock  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><Pan  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><Cursor  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('rect')} type="button" class="btn btn-light"><Rectangle  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('diamond')} type="button" class="btn btn-light"><Diamond  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('circle')} type="button" class="btn btn-light"><Circle  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('arrow')} type="button" class="btn btn-light"><Arrow  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('line')} type="button" class="btn btn-light"><Line  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeShape('pen')} type="button" class="btn btn-light"><Pen  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><Text  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><InsertImage  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><Eraser  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('pan')} type="button" class="btn btn-light"><Pan  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('cursor')} type="button" class="btn btn-light"><Cursor  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('rect')} type="button" class="btn btn-light"><Rectangle  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('diamond')} type="button" class="btn btn-light"><Diamond  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('circle')} type="button" class="btn btn-light"><Circle  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('arrow')} type="button" class="btn btn-light"><Arrow  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('line')} type="button" class="btn btn-light"><Line  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('pen')} type="button" class="btn btn-light"><Pen  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('text')} type="button" class="btn btn-light"><Text  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('image')} type="button" class="btn btn-light"><InsertImage  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('eraser')} type="button" class="btn btn-light"><Eraser  style={{margin:'3px'}}/></button>
         <button type="button" class="btn btn-light"><Tools  style={{margin:'3px'}}/></button>
     </div>
   )

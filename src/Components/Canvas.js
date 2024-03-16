@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
-import { Stage, Layer, Line, Rect, Circle, Arrow, RegularPolygon } from 'react-konva';
+import React, { useState , useRef } from 'react';
+import { Stage, Layer, Line, Rect, Circle, Arrow, RegularPolygon, Transformer } from 'react-konva';
 import Menu from './Menu';
-import { useShapeContext } from '../Context/ShapeContext';
+import { useActionContext } from '../Context/ActionContext';
 
 function Canvas() {
-  const { currentShape } = useShapeContext();
-
+  const { currentAction } = useActionContext();
+  const transformerRef = useRef();
   const [lines, setLines] = useState([]);
   const [penPoints, setPenPoints] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
 
+  const isDraggable = currentAction === 'cursor';
+
   const handleMouseDown = (event) => {
     setIsDrawing(true);
     const { x, y } = event.target.getStage().getPointerPosition();
-    if (currentShape === 'pen') {
+    if (currentAction === 'pen') {
       setPenPoints([...penPoints, { x, y }]);
     } else {
-      setLines([...lines, { type: currentShape, points: [x, y] }]);
+      setLines([...lines, { type: currentAction, points: [x, y] }]);
     }
   };
 
   const handleMouseMove = (event) => {
     if (!isDrawing) return;
     const { x, y } = event.target.getStage().getPointerPosition();
-    if (currentShape === 'pen') {
+    if (currentAction === 'pen') {
       setPenPoints([...penPoints, { x, y }]);
     } else {
       const updatedLines = [...lines];
@@ -35,11 +37,21 @@ function Canvas() {
 
   const handleMouseUp = () => {
     setIsDrawing(false);
-    if (currentShape === 'pen') {
+    if (currentAction === 'pen') {
       setLines([...lines, { type: 'pen', points: penPoints.map((point) => [point.x, point.y]).flat() }]);
       setPenPoints([]);
     }
   };
+
+  const handleonClick = (e) => {
+    if(currentAction !== 'cursor') return;
+    const target = e.target;
+    transformerRef.current.nodes([target]);
+  }
+
+  const handleonDblClick = () => {
+    transformerRef.current.nodes([]);
+  }
 
   return (
     <>
@@ -64,6 +76,9 @@ function Canvas() {
                     tension={0.5}
                     lineCap="round"
                     globalCompositeOperation="source-over"
+                    draggable={isDraggable}
+                    onClick={handleonClick}
+                    onDblClick={handleonDblClick}
                   />
                 );
               case 'rect':
@@ -76,6 +91,9 @@ function Canvas() {
                     height={shape.points[3] - shape.points[1]}
                     stroke="black"
                     strokeWidth={5}
+                    draggable={isDraggable}
+                    onClick={handleonClick}
+                    onDblClick={handleonDblClick}
                   />
                 );
               case 'circle':
@@ -89,6 +107,9 @@ function Canvas() {
                     radius={radius}
                     stroke="black"
                     strokeWidth={5}
+                    draggable={isDraggable}
+                    onClick={handleonClick}
+                    onDblClick={handleonDblClick}
                   />
                 );
               case 'arrow':
@@ -101,6 +122,9 @@ function Canvas() {
                     tension={0.5}
                     pointerWidth={10}
                     pointerLength={10}
+                    draggable={isDraggable}
+                    onClick={handleonClick}
+                    onDblClick={handleonDblClick}
                   />
                 );
               case 'diamond':
@@ -113,12 +137,16 @@ function Canvas() {
                     radius={Math.sqrt(Math.pow(shape.points[2] - shape.points[0], 2) + Math.pow(shape.points[3] - shape.points[1], 2)) / 2}
                     stroke="black"
                     strokeWidth={5}
+                    draggable={isDraggable}
+                    onClick={handleonClick}
+                    onDblClick={handleonDblClick}
                   />
                 );
               default:
                 return null;
             }
           })}
+          <Transformer ref={transformerRef} />
         </Layer>
         <Layer>
           <Line

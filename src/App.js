@@ -1,15 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
 import Canvas from './Components/Canvas';
-import { ShapeProvider } from './Context/ShapeContext';
+import { ActionProvider } from './Context/ActionContext';
 
 function App() {
   return (
-    <ShapeProvider>
+    <ActionProvider>
     <div className="App">
       <Canvas/>
     </div>
-    </ShapeProvider>
+    </ActionProvider>
   );
 }
 
