@@ -42,7 +42,7 @@ function Canvas() {
     setIsDrawing(false);
     if (currentAction === 'pen') {
       setLines([...lines, { type: 'pen', points: penPoints.map((point) => [point.x, point.y]).flat() }]);
-      setPenPoints([]);
+      // setPenPoints([]);
     }
   };
 
@@ -149,9 +149,6 @@ function Canvas() {
                 return null;
             }
           })}
-          <Transformer ref={transformerRef} />
-        </Layer>
-        <Layer>
           <Line
             points={penPoints.map((point) => [point.x, point.y]).flat()}
             stroke="black"
@@ -159,7 +156,11 @@ function Canvas() {
             tension={0.5}
             lineCap="round"
             globalCompositeOperation="source-over"
+            draggable
+            onClick={handleonClick}
+            onDblClick={handleonDblClick}
           />
+          <Transformer ref={transformerRef} />
         </Layer>
       </Stage>
     </>
