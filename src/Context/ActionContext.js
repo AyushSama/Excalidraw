@@ -9,7 +9,6 @@ export const ActionProvider = ({ children }) => {
   const [currentAction, setCurrentAction] = useState('Pen');
 
   const changeAction = (Action) => {
-    console.log(Action)
     setCurrentAction(Action);
   };
 
