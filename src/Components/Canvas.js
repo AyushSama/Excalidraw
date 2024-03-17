@@ -14,7 +14,7 @@ export default function Canvas() {
     const [circles, setCircles] = useState([]);
     const [arrows, setArrows] = useState([]);
     const [diamonds, setDiamonds] = useState([]);
-    const [line, setLine] = useState([]);
+    const [lines, setLines] = useState([]);
     const [scribbles, setScribbles] = useState([]);
 
     const isDraggable = currentAction === 'select';
@@ -62,6 +62,12 @@ export default function Canvas() {
                 setScribbles((scribbles) => [...scribbles, {
                     id,
                     points: [x, y]
+                }]);
+                break;
+            case 'line':
+                setLines((lines) => [...lines, {
+                    id,
+                    points: [x, y , x , y]
                 }]);
                 break;
         }
@@ -129,6 +135,19 @@ export default function Canvas() {
                             }
                         }
                         return scribble;
+                    })
+                );
+                break;
+            case 'line':
+                setLines((lines) =>
+                    lines.map((line) => {
+                        if (line.id === currentShapeId.current) {
+                            return {
+                                ...line,
+                                points: [line.points[0], line.points[1], x, y]
+                            }
+                        }
+                        return line;
                     })
                 );
                 break;
@@ -202,6 +221,15 @@ export default function Canvas() {
                             lineCap="round"
                             lineJoin="round"
                             points={scribble.points}
+                            stroke="black"
+                            strokeWidth={2}
+                            draggable={isDraggable}
+                        />
+                    ))}
+                    {lines.map((line) => (
+                        <Line
+                            key={line.id}
+                            points={line.points}
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
