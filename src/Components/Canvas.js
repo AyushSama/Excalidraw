@@ -20,6 +20,7 @@ export default function Canvas() {
     const isDraggable = currentAction === 'select';
     const currentShapeId = useRef();
     const isDrawing = useRef();
+    const transformerRef = useRef();
 
     const handleMouseDown = (e) => {
 
@@ -84,7 +85,7 @@ export default function Canvas() {
 
     const handleMouseMove = (e) => {
 
-        if (currentAction === 'select' || !isDrawing.current)
+        if (currentAction === 'cursor' || !isDrawing.current)
             return;
 
         const stage = stageRef.current;
@@ -179,7 +180,12 @@ export default function Canvas() {
         isDrawing.current = false;
     }
 
-
+    const handleClick = (e) => {
+        if(currentAction!='cursor')
+            return;
+        const target = e.currentTarget;
+        transformerRef.current.nodes([target]);
+    }
 
     return (
         <>
@@ -198,6 +204,9 @@ export default function Canvas() {
                         width={window.innerWidth}
                         fill="#ffffff"
                         id="bg"
+                        onClick={() => {
+                            transformerRef.current.nodes([]);
+                        }}
                     />
                     {rectangles.map((rectangle) => (
                         <Rect
@@ -210,6 +219,7 @@ export default function Canvas() {
                             fill='red'
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
 
@@ -222,6 +232,7 @@ export default function Canvas() {
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
                     {arrows.map((arrow) => (
@@ -231,6 +242,7 @@ export default function Canvas() {
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
                     {scribbles.map((scribble) => (
@@ -242,6 +254,7 @@ export default function Canvas() {
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
                     {lines.map((line) => (
@@ -251,6 +264,7 @@ export default function Canvas() {
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
                     {diamonds.map((diamond) => (
@@ -263,8 +277,10 @@ export default function Canvas() {
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
+                            onClick={handleClick}
                         />
                     ))}
+                    <Transformer ref={transformerRef} />
                 </Layer>
             </Stage>
         </>
