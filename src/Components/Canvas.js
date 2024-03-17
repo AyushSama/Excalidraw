@@ -58,6 +58,12 @@ export default function Canvas() {
                     points: [x, y, x + 20, y + 20]
                 }]);
                 break;
+            case 'pen':
+                setScribbles((scribbles) => [...scribbles, {
+                    id,
+                    points: [x, y]
+                }]);
+                break;
         }
 
     }
@@ -110,6 +116,19 @@ export default function Canvas() {
                             }
                         }
                         return arrow;
+                    })
+                );
+                break;
+            case 'pen':
+                setScribbles((scribbles) =>
+                    scribbles.map((scribble) => {
+                        if (scribble.id === currentShapeId.current) {
+                            return {
+                                ...scribble,
+                                points: [...scribble.points, x, y],
+                            }
+                        }
+                        return scribble;
                     })
                 );
                 break;
@@ -172,6 +191,17 @@ export default function Canvas() {
                         <Arrow
                             key={arrow.id}
                             points={arrow.points}
+                            stroke="black"
+                            strokeWidth={2}
+                            draggable={isDraggable}
+                        />
+                    ))}
+                    {scribbles.map((scribble) => (
+                        <Line
+                            key={scribble.id}
+                            lineCap="round"
+                            lineJoin="round"
+                            points={scribble.points}
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
