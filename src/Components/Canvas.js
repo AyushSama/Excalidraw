@@ -70,7 +70,7 @@ export default function Canvas() {
                     points: [x, y, x, y]
                 }]);
                 break;
-            case 'diamond': 
+            case 'diamond':
                 setDiamonds((diamonds) => [...diamonds, {
                     id,
                     x,
@@ -159,7 +159,8 @@ export default function Canvas() {
                     })
                 );
                 break;
-            case 'diamond': 
+            case 'diamond':
+                setDiamonds((diamonds) =>
                     diamonds.map((diamond) => {
                         if (diamond.id === currentShapeId.current) {
                             return { ...diamond, radius: Math.max(Math.abs(x - diamond.x), Math.abs(y - diamond.y)) };
@@ -258,7 +259,7 @@ export default function Canvas() {
                             sides={4} 
                             radius={diamond.radius}
                             x={diamond.x}
-                            y={diamond.y}
+                            y={diamond.y} 
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
