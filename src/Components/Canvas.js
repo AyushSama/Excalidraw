@@ -50,7 +50,14 @@ export default function Canvas() {
                     x,
                     y,
                     radius: 0,
-                }])
+                }]);
+                break;
+            case 'arrow':
+                setArrows((arrows) => [...arrows, {
+                    id,
+                    points: [x, y, x + 20, y + 20]
+                }]);
+                break;
         }
 
     }
@@ -66,7 +73,7 @@ export default function Canvas() {
         console.log(currentAction + "  " + currentShapeId.current)
 
         switch (currentAction) {
-            case 'rect' :
+            case 'rect':
                 setRectangles((rectangles) =>
                     rectangles.map((rectangle) => {
                         if (rectangle.id === currentShapeId.current) {
@@ -92,6 +99,20 @@ export default function Canvas() {
                         return circle;
                     })
                 );
+                break;
+            case 'arrow':
+                setArrows((arrows) =>
+                    arrows.map((arrow) => {
+                        if (arrow.id === currentShapeId.current) {
+                            return {
+                                ...arrow,
+                                points: [arrow.points[0], arrow.points[1], x, y],
+                            }
+                        }
+                        return arrow;
+                    })
+                );
+                break;
             default:
                 return null;
         }
@@ -142,6 +163,15 @@ export default function Canvas() {
                             radius={circle.radius}
                             x={circle.x}
                             y={circle.y}
+                            stroke="black"
+                            strokeWidth={2}
+                            draggable={isDraggable}
+                        />
+                    ))}
+                    {arrows.map((arrow) => (
+                        <Arrow
+                            key={arrow.id}
+                            points={arrow.points}
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
