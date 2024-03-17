@@ -67,7 +67,15 @@ export default function Canvas() {
             case 'line':
                 setLines((lines) => [...lines, {
                     id,
-                    points: [x, y , x , y]
+                    points: [x, y, x, y]
+                }]);
+                break;
+            case 'diamond': 
+                setDiamonds((diamonds) => [...diamonds, {
+                    id,
+                    x,
+                    y,
+                    radius: 0
                 }]);
                 break;
         }
@@ -151,6 +159,15 @@ export default function Canvas() {
                     })
                 );
                 break;
+            case 'diamond': 
+                    diamonds.map((diamond) => {
+                        if (diamond.id === currentShapeId.current) {
+                            return { ...diamond, radius: Math.max(Math.abs(x - diamond.x), Math.abs(y - diamond.y)) };
+                        }
+                        return diamond;
+                    })
+                );
+                break;
             default:
                 return null;
         }
@@ -230,6 +247,18 @@ export default function Canvas() {
                         <Line
                             key={line.id}
                             points={line.points}
+                            stroke="black"
+                            strokeWidth={2}
+                            draggable={isDraggable}
+                        />
+                    ))}
+                    {diamonds.map((diamond) => (
+                        <RegularPolygon
+                            key={diamond.id}
+                            sides={4} 
+                            radius={diamond.radius}
+                            x={diamond.x}
+                            y={diamond.y}
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
