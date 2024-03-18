@@ -4,6 +4,7 @@ import { useActionContext } from '../Context/ActionContext'
 import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu';
 import Konva from 'konva';
+import Toolbox from './Toolbox';
 
 export default function Canvas() {
 
@@ -20,6 +21,8 @@ export default function Canvas() {
     const [lasers, setLasers] = useState([]);
 
     const isDraggable = currentAction === 'cursor';
+    const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
+    const toolBox = !excludedActions.includes(currentAction);
     const currentShapeId = useRef();
     const isDrawing = useRef();
     const transformerRef = useRef();
@@ -344,13 +347,13 @@ export default function Canvas() {
 
         setImages(updatedImages);
 
-    };    
+    };
 
     const isMouseOverDiamond = (mouseX, mouseY, diamondX, diamondY, diamondRadius) => {
         // Calculate the distances from the mouse coordinates to the center of the diamond
         const dx = Math.abs(mouseX - diamondX);
         const dy = Math.abs(mouseY - diamondY);
-    
+
         // Check if the mouse coordinates are within the diamond's bounds
         if (dx + dy < diamondRadius) {
             // If the sum of the distances is less than the radius, the mouse is inside the diamond
@@ -364,23 +367,23 @@ export default function Canvas() {
         // Mouse is outside the diamond
         return false;
     };
-    
+
 
     const pointToLineDistance = (x, y, x1, y1, x2, y2) => {
         const A = x - x1;
         const B = y - y1;
         const C = x2 - x1;
         const D = y2 - y1;
-    
+
         const dot = A * C + B * D;
         const len_sq = C * C + D * D;
         let param = -1;
         if (len_sq !== 0) {
             param = dot / len_sq;
         }
-    
+
         let xx, yy;
-    
+
         if (param < 0) {
             xx = x1;
             yy = y1;
@@ -391,11 +394,11 @@ export default function Canvas() {
             xx = x1 + param * C;
             yy = y1 + param * D;
         }
-    
+
         const dx = x - xx;
         const dy = y - yy;
         return Math.sqrt(dx * dx + dy * dy);
-    };    
+    };
 
     useEffect(() => {
         const lineNode = laserRef.current;
@@ -405,23 +408,23 @@ export default function Canvas() {
                 opacity: 0, // End opacity value (fully transparent)
                 duration: 0.5, // Duration of the tween animation in seconds
             });
-    
+
             // Start the tween animation when the component mounts
             tween.play();
-    
+
             // Clean up the tween when the component unmounts
             return () => {
                 tween.destroy();
             };
         }
     }, [lasers]);
-    
+
 
 
     return (
         <>
             <Menu stageRef={stageRef} />
-            <div style={{ height: '500px', position: 'absolute', border: '1px solid red', width: '100px', float: 'right', zIndex: '1' }}>Here</div>
+            {toolBox && <Toolbox />}
             <Stage ref={stageRef}
                 width={window.innerWidth}
                 height={window.innerHeight}
