@@ -16,6 +16,7 @@ export default function Canvas() {
     const [lines, setLines] = useState([]);
     const [scribbles, setScribbles] = useState([]);
     const [images, setImages] = useState([]);
+    const [lasers, setLasers] = useState([]);
 
     const isDraggable = currentAction === 'cursor';
     const currentShapeId = useRef();
@@ -88,6 +89,12 @@ export default function Canvas() {
                     input.remove();
                 });
                 input.click();
+                break;
+            case 'laser':
+                setLasers((lasers) => [...lasers, {
+                    id,
+                    points: [x, y]
+                }]);
                 break;
             default:
                 return null;
@@ -208,6 +215,19 @@ export default function Canvas() {
             case 'eraser':
                 handleEraser(x, y);
                 break;
+            case 'laser':
+                setLasers((lasers) =>
+                    lasers.map((laser) => {
+                        if (laser.id === currentShapeId.current) {
+                            return {
+                                ...laser,
+                                points: [...laser.points, x, y],
+                            }
+                        }
+                        return laser;
+                    })
+                );
+                break;
             default:
                 return null;
         }
@@ -216,6 +236,7 @@ export default function Canvas() {
 
     const handleMouseUp = () => {
         isDrawing.current = false;
+        setLasers([]);
     }
 
     const handleClick = (e) => {
@@ -477,6 +498,16 @@ export default function Canvas() {
                             height={img.height}
                             draggable={isDraggable}
                             onClick={handleClick}
+                        />
+                    ))}
+                    {lasers.map((laser) => (
+                        <Line
+                            key={laser.id}
+                            lineCap="round"
+                            lineJoin="round"
+                            points={laser.points}
+                            stroke='red'
+                            strokeWidth={2}
                         />
                     ))}
                     <Transformer ref={transformerRef} />

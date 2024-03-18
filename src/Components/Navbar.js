@@ -33,7 +33,7 @@ function Navbar() {
         <button onClick={() => changeAction('text')} type="button" class="btn btn-light"><Text  style={{margin:'3px'}}/></button>
         <button onClick={() => changeAction('image')} type="button" class="btn btn-light"><InsertImage  style={{margin:'3px'}}/></button>
         <button onClick={() => changeAction('eraser')} type="button" class="btn btn-light"><Eraser  style={{margin:'3px'}}/></button>
-        <button type="button" class="btn btn-light"><Tools  style={{margin:'3px'}}/></button>
+        <button onClick={() => changeAction('laser')} type="button" class="btn btn-light"><Tools  style={{margin:'3px'}}/></button>
     </div>
   )
 }
