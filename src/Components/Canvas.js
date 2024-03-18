@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon, Image } from 'react-konva';
 import { useActionContext } from '../Context/ActionContext'
 import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu';
+import Konva from 'konva';
 
 export default function Canvas() {
 
@@ -22,6 +23,8 @@ export default function Canvas() {
     const currentShapeId = useRef();
     const isDrawing = useRef();
     const transformerRef = useRef();
+
+    const laserRef = useRef();
 
     const handleMouseDown = (e) => {
 
@@ -394,6 +397,27 @@ export default function Canvas() {
         return Math.sqrt(dx * dx + dy * dy);
     };    
 
+    useEffect(() => {
+        const lineNode = laserRef.current;
+        if (lineNode) { // Check if the reference to the laser shape is valid
+            const tween = new Konva.Tween({
+                node: lineNode,
+                opacity: 0, // End opacity value (fully transparent)
+                duration: 0.5, // Duration of the tween animation in seconds
+            });
+    
+            // Start the tween animation when the component mounts
+            tween.play();
+    
+            // Clean up the tween when the component unmounts
+            return () => {
+                tween.destroy();
+            };
+        }
+    }, [lasers]);
+    
+
+
     return (
         <>
             <Menu stageRef={stageRef} />
@@ -502,12 +526,13 @@ export default function Canvas() {
                     ))}
                     {lasers.map((laser) => (
                         <Line
+                            ref={laserRef}
                             key={laser.id}
                             lineCap="round"
                             lineJoin="round"
                             points={laser.points}
                             stroke='red'
-                            strokeWidth={2}
+                            strokeWidth={5}
                         />
                     ))}
                     <Transformer ref={transformerRef} />
