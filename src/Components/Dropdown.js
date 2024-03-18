@@ -40,6 +40,51 @@ function Dropdown(props) {
         props.stageRef.current.clear();
     }
 
+    const saveDrawing = ()=>{
+        const drawingName = window.prompt("Enter a name for your drawing:");
+        const serializedData = {
+            rectangles,
+            circles,
+            arrows,
+            diamonds,
+            lines,
+            scribbles,
+            images,
+            lasers
+        };
+        const serializedJSON = JSON.stringify(serializedData);
+        localStorage.setItem(drawingName, serializedJSON);
+    }
+
+    const openDrawing = ()=>{
+        const keys = Object.keys(localStorage);
+        const selectedDrawingName = window.prompt("Enter the name of the drawing you want to open:", keys[0]);
+        
+        if (selectedDrawingName) {
+            const serializedData = localStorage.getItem(selectedDrawingName);
+            
+            if (serializedData) {
+                const parsedData = JSON.parse(serializedData);
+                
+                // Set the shapes context states with the parsed data
+                setRectangles(parsedData.rectangles);
+                setCircles(parsedData.circles);
+                setArrows(parsedData.arrows);
+                setDiamonds(parsedData.diamonds);
+                setLines(parsedData.lines);
+                setScribbles(parsedData.scribbles);
+                setImages(parsedData.images);
+                setLasers(parsedData.lasers);
+                
+                console.log(`Drawing "${selectedDrawingName}" opened from localStorage.`);
+            } else {
+                alert(`Drawing "${selectedDrawingName}" not found in localStorage.`);
+            }
+        } else {
+            console.log("User canceled the open operation."); // Optional: Log message if user cancels
+        }
+    }
+
     return (
         <div class="dropdown">
             <button class="btn btn-outline-success" type="button" data-bs-toggle="dropdown"
@@ -47,8 +92,8 @@ function Dropdown(props) {
                 <List width="35" />
             </button>
             <ul class="dropdown-menu">
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Open style={{ marginRight: '10px' }} />Open</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Save style={{ marginRight: '10px' }} />Save to...</button></li>
+                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={()=>openDrawing()}><Open style={{ marginRight: '10px' }} />Open</button></li>
+                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={()=>saveDrawing()}><Save style={{ marginRight: '10px' }} />Save to...</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={()=>exportImage()}><Export style={{ marginRight: '10px' }} />Export Image</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Collab style={{ marginRight: '10px' }} />Live Collaboration</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Help style={{ marginRight: '10px' }} />Help</button></li>
