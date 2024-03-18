@@ -201,7 +201,7 @@ export default function Canvas() {
             }
             return true; // Keep the rectangle
         });
-    
+
         // Update the state with the filtered rectangles
         setRectangles(updatedRectangles);
 
@@ -214,11 +214,74 @@ export default function Canvas() {
             }
             return true; // Keep the circle
         });
-        
+
         setCircles(updatedCircles);
 
+        const updatedScribbles = scribbles.filter((scribble) => {
+            // Assuming scribble has properties points
+            const { points } = scribble;
+            // Check if the mouse coordinates are near any point of the scribble
+            for (let i = 0; i < points.length; i += 2) {
+                const x = points[i];
+                const y = points[i + 1];
+                const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+                if (distance <= 10) {
+                    return false; // Remove the scribble
+                }
+            }
+            return true; // Keep the scribble
+        });
+
+        setScribbles(updatedScribbles);
+
+        // Remove lines (assuming the lines are represented as arrays of points)
+        const updatedLines = lines.filter((line) => {
+            // Assuming line has properties points
+            const { points } = line;
+            const [x1, y1, x2, y2] = points;
+            // Check if the mouse coordinates are near the line
+            const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
+            if (distance <= 20) {
+                return false; // Remove the line
+            }
+            return true; // Keep the line
+        });
+
+        setLines(updatedLines);
+
     };
+
+    const pointToLineDistance = (x, y, x1, y1, x2, y2) => {
+        const A = x - x1;
+        const B = y - y1;
+        const C = x2 - x1;
+        const D = y2 - y1;
     
+        const dot = A * C + B * D;
+        const len_sq = C * C + D * D;
+        let param = -1;
+        if (len_sq !== 0) {
+            param = dot / len_sq;
+        }
+    
+        let xx, yy;
+    
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + param * C;
+            yy = y1 + param * D;
+        }
+    
+        const dx = x - xx;
+        const dy = y - yy;
+        return Math.sqrt(dx * dx + dy * dy);
+    };    
+
     return (
         <>
             <Menu stageRef={stageRef} />
