@@ -309,6 +309,17 @@ export default function Canvas() {
 
         setDiamonds(updatedDiamonds);
 
+        const updatedImages = images.filter((image) => {
+            const { x, y, width, height } = image;
+            // Check if the mouse coordinates are within the bounds of the image
+            if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+                return false; // Remove the image
+            }
+            return true; // Keep the image
+        });
+
+        setImages(updatedImages);
+
     };    
 
     const isMouseOverDiamond = (mouseX, mouseY, diamondX, diamondY, diamondRadius) => {
