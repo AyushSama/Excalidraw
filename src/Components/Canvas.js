@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon } from 'react-konva';
+import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon, Image } from 'react-konva';
 import { useActionContext } from '../Context/ActionContext'
 import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu';
@@ -15,6 +15,7 @@ export default function Canvas() {
     const [diamonds, setDiamonds] = useState([]);
     const [lines, setLines] = useState([]);
     const [scribbles, setScribbles] = useState([]);
+    const [images, setImages] = useState([]);
 
     const isDraggable = currentAction === 'cursor';
     const currentShapeId = useRef();
@@ -78,11 +79,44 @@ export default function Canvas() {
                     radius: 0
                 }]);
                 break;
+            case 'image':
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.addEventListener('change', () => {
+                    handleImageUpload(input.files[0], x, y, id);
+                    input.remove();
+                });
+                input.click();
+                break;
             default:
                 return null;
         }
 
     }
+
+    const handleImageUpload = (file, x, y, id) => {
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const imageDataUrl = reader.result;
+                const image = new window.Image();
+                image.src = imageDataUrl;
+                image.onload = () => {
+                    const newImage = {
+                        id,
+                        image: image,
+                        x,
+                        y,
+                        width: 200,
+                        height: 200,
+                    };
+                    setImages((prevImages) => [...prevImages, newImage]);
+                };
+            };
+        }
+    };
 
     const handleMouseMove = (e) => {
 
@@ -331,6 +365,7 @@ export default function Canvas() {
     return (
         <>
             <Menu stageRef={stageRef} />
+            <div style={{ height: '500px', position: 'absolute', border: '1px solid red', width: '100px', float: 'right', zIndex: '1' }}>Here</div>
             <Stage ref={stageRef}
                 width={window.innerWidth}
                 height={window.innerHeight}
@@ -417,6 +452,18 @@ export default function Canvas() {
                             y={diamond.y}
                             stroke="black"
                             strokeWidth={2}
+                            draggable={isDraggable}
+                            onClick={handleClick}
+                        />
+                    ))}
+                    {images.map((img) => (
+                        <Image
+                            key={img.id}
+                            image={img.image}
+                            x={img.x}
+                            y={img.y}
+                            width={img.width}
+                            height={img.height}
                             draggable={isDraggable}
                             onClick={handleClick}
                         />
