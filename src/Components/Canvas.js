@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu';
 import Konva from 'konva';
 import Toolbox from './Toolbox';
+import { useShapesContext } from '../Context/ShapesContext';
 
 export default function Canvas() {
 
@@ -13,15 +14,8 @@ export default function Canvas() {
     const {strokeColor ,fillColor,strokeWidth} = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
 
-    const [rectangles, setRectangles] = useState([]);
-    const [circles, setCircles] = useState([]);
-    const [arrows, setArrows] = useState([]);
-    const [diamonds, setDiamonds] = useState([]);
-    const [lines, setLines] = useState([]);
-    const [scribbles, setScribbles] = useState([]);
-    const [images, setImages] = useState([]);
-    const [lasers, setLasers] = useState([]);
-
+    const {rectangles ,setRectangles,circles,setCircles,arrows,setArrows,diamonds,setDiamonds,lines,setLines,scribbles,setScribbles,images,setImages,lasers,setLasers} = useShapesContext();
+    
     const isDraggable = currentAction === 'cursor';
     const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
     const toolBox = !excludedActions.includes(currentAction);

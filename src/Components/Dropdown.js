@@ -1,4 +1,5 @@
 import React from 'react'
+import { useShapesContext } from '../Context/ShapesContext';
 import { ReactComponent as List } from '../list.svg';
 import { ReactComponent as Open } from '../Logo/Dropdown/folder.svg';
 import { ReactComponent as Save } from '../Logo/Dropdown/download.svg';
@@ -24,6 +25,20 @@ function Dropdown(props) {
         link.click();
         document.body.removeChild(link);
     }
+    
+    const {rectangles ,setRectangles,circles,setCircles,arrows,setArrows,diamonds,setDiamonds,lines,setLines,scribbles,setScribbles,images,setImages,lasers,setLasers} = useShapesContext();
+    const resetCanvas = ()=> {
+        alert('Do you really want to reset your masterpiece?');
+        setRectangles([]);
+        setCircles([]);
+        setArrows([]);
+        setDiamonds([]);
+        setLines([]);
+        setScribbles([]);
+        setImages([]);
+        setLasers([]);
+        props.stageRef.current.clear();
+    }
 
     return (
         <div class="dropdown">
@@ -34,10 +49,10 @@ function Dropdown(props) {
             <ul class="dropdown-menu">
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Open style={{ marginRight: '10px' }} />Open</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Save style={{ marginRight: '10px' }} />Save to...</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={exportImage}><Export style={{ marginRight: '10px' }} />Export Image</button></li>
+                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={()=>exportImage()}><Export style={{ marginRight: '10px' }} />Export Image</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Collab style={{ marginRight: '10px' }} />Live Collaboration</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Help style={{ marginRight: '10px' }} />Help</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Reset style={{ marginRight: '10px' }} />Reset the Canvas</button></li>
+                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light" onClick={()=>resetCanvas()}><Reset style={{ marginRight: '10px' }} />Reset the Canvas</button></li>
                 <hr />
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Plus style={{ marginRight: '10px' }} />Excalidraw+</button></li>
                 <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" class="btn btn-light"><Github style={{ marginRight: '10px' }} />Github</button></li>
