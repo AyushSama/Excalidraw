@@ -8,7 +8,6 @@ export default function Canvas() {
 
     const { currentAction } = useActionContext();  // Get the current Action
     const stageRef = useRef();   // Reference for the Stage
-    const [points, setPenPoints] = useState([]);
 
     const [rectangles, setRectangles] = useState([]);
     const [circles, setCircles] = useState([]);
@@ -17,7 +16,7 @@ export default function Canvas() {
     const [lines, setLines] = useState([]);
     const [scribbles, setScribbles] = useState([]);
 
-    const isDraggable = currentAction === 'select';
+    const isDraggable = currentAction === 'cursor';
     const currentShapeId = useRef();
     const isDrawing = useRef();
     const transformerRef = useRef();
@@ -79,6 +78,8 @@ export default function Canvas() {
                     radius: 0
                 }]);
                 break;
+            default:
+                return null;
         }
 
     }
@@ -170,6 +171,9 @@ export default function Canvas() {
                     })
                 );
                 break;
+            case 'eraser':
+                handleEraser(x, y);
+                break;
             default:
                 return null;
         }
@@ -181,12 +185,40 @@ export default function Canvas() {
     }
 
     const handleClick = (e) => {
-        if(currentAction!='cursor')
+        if (currentAction !== 'cursor')
             return;
         const target = e.currentTarget;
         transformerRef.current.nodes([target]);
     }
 
+    const handleEraser = (mouseX, mouseY) => {
+        // Iterate over each shape and check if the mouse is over it
+        const updatedRectangles = rectangles.filter((rectangle) => {
+            const { x, y, width, height } = rectangle;
+            // Check if the mouse coordinates are within the bounds of the shape
+            if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+                return false; // Remove the rectangle
+            }
+            return true; // Keep the rectangle
+        });
+    
+        // Update the state with the filtered rectangles
+        setRectangles(updatedRectangles);
+
+        const updatedCircles = circles.filter((circle) => {
+            const { x, y, radius } = circle;
+            // Check if the mouse coordinates are within the bounds of the shape
+            const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+            if (distance <= radius) {
+                return false; // Remove the circle
+            }
+            return true; // Keep the circle
+        });
+        
+        setCircles(updatedCircles);
+
+    };
+    
     return (
         <>
             <Menu stageRef={stageRef} />
@@ -270,10 +302,10 @@ export default function Canvas() {
                     {diamonds.map((diamond) => (
                         <RegularPolygon
                             key={diamond.id}
-                            sides={4} 
+                            sides={4}
                             radius={diamond.radius}
                             x={diamond.x}
-                            y={diamond.y} 
+                            y={diamond.y}
                             stroke="black"
                             strokeWidth={2}
                             draggable={isDraggable}
