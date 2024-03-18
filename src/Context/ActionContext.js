@@ -6,7 +6,7 @@ const ActionContext = createContext();
 export const useActionContext = () => useContext(ActionContext);
 
 export const ActionProvider = ({ children }) => {
-  const [currentAction, setCurrentAction] = useState('Pen');
+  const [currentAction, setCurrentAction] = useState('cursor');
 
   const changeAction = (Action) => {
     setCurrentAction(Action);
