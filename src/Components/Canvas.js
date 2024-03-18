@@ -249,7 +249,53 @@ export default function Canvas() {
 
         setLines(updatedLines);
 
+        const updatedArrows = arrows.filter((arrow) => {
+            // Assuming arrow has properties points
+            const { points } = arrow;
+            const [x1, y1, x2, y2] = points;
+            // Check if the mouse coordinates are near the arrow
+            const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
+            if (distance <= 20) {
+                return false; // Remove the arrow
+            }
+            return true; // Keep the arrow
+        });
+
+        setArrows(updatedArrows);
+
+        const updatedDiamonds = diamonds.filter((diamond) => {
+            // Assuming diamond has properties x, y, radius
+            const { x, y, radius } = diamond;
+            // Check if the mouse coordinates are within the bounds of the shape
+            if (isMouseOverDiamond(mouseX, mouseY, x, y, radius)) {
+                return false; // Remove the diamond
+            }
+            return true; // Keep the diamond
+        });
+
+        setDiamonds(updatedDiamonds);
+
+    };    
+
+    const isMouseOverDiamond = (mouseX, mouseY, diamondX, diamondY, diamondRadius) => {
+        // Calculate the distances from the mouse coordinates to the center of the diamond
+        const dx = Math.abs(mouseX - diamondX);
+        const dy = Math.abs(mouseY - diamondY);
+    
+        // Check if the mouse coordinates are within the diamond's bounds
+        if (dx + dy < diamondRadius) {
+            // If the sum of the distances is less than the radius, the mouse is inside the diamond
+            return true;
+        } else if (dx < diamondRadius && dy < diamondRadius) {
+            // If the mouse is within the bounding box but outside the circle, check the corners
+            if (dx * dx + dy * dy < diamondRadius * diamondRadius) {
+                return true;
+            }
+        }
+        // Mouse is outside the diamond
+        return false;
     };
+    
 
     const pointToLineDistance = (x, y, x1, y1, x2, y2) => {
         const A = x - x1;
