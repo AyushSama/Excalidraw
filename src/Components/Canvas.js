@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon, Image } from 'react-konva';
 import { useActionContext } from '../Context/ActionContext'
 import { useToolboxContext } from '../Context/ToolboxContext';
@@ -7,15 +7,17 @@ import Menu from './Menu';
 import Konva from 'konva';
 import Toolbox from './Toolbox';
 import { useShapesContext } from '../Context/ShapesContext';
+import { io } from 'socket.io-client';
 
 export default function Canvas() {
 
     const { currentAction } = useActionContext();  // Get the current Action
-    const {strokeColor ,fillColor,strokeWidth} = useToolboxContext();
+    const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
+    const socketRef = useRef();
 
-    const {rectangles ,setRectangles,circles,setCircles,arrows,setArrows,diamonds,setDiamonds,lines,setLines,scribbles,setScribbles,images,setImages,lasers,setLasers} = useShapesContext();
-    
+    const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers } = useShapesContext();
+
     const isDraggable = currentAction === 'cursor';
     const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
     const toolBox = !excludedActions.includes(currentAction);
@@ -426,6 +428,19 @@ export default function Canvas() {
         }
     }, [lasers]);
 
+    useEffect(() => {
+        try {
+            socketRef.current = io('http://localhost:5000/');
+            return () => {
+                socketRef.current.disconnect(); // Disconnect the socket when the component unmounts
+            };
+
+        } catch (error) {
+            alert(error)
+        }
+
+
+    }, [])
 
 
     return (
@@ -457,7 +472,7 @@ export default function Canvas() {
                             y={rectangle.y}
                             height={rectangle.height}
                             width={rectangle.width}
-                            stroke = {rectangle.strokeColor}
+                            stroke={rectangle.strokeColor}
                             strokeWidth={rectangle.strokeWidth}
                             fill={rectangle.fillColor}
                             draggable={isDraggable}
@@ -471,7 +486,7 @@ export default function Canvas() {
                             radius={circle.radius}
                             x={circle.x}
                             y={circle.y}
-                            stroke = {circle.strokeColor}
+                            stroke={circle.strokeColor}
                             strokeWidth={circle.strokeWidth}
                             fill={circle.fillColor}
                             draggable={isDraggable}
@@ -482,7 +497,7 @@ export default function Canvas() {
                         <Arrow
                             key={arrow.id}
                             points={arrow.points}
-                            stroke = {arrow.strokeColor}
+                            stroke={arrow.strokeColor}
                             strokeWidth={arrow.strokeWidth}
                             draggable={isDraggable}
                             onClick={handleClick}
@@ -494,7 +509,7 @@ export default function Canvas() {
                             lineCap="round"
                             lineJoin="round"
                             points={scribble.points}
-                            stroke = {scribble.strokeColor}
+                            stroke={scribble.strokeColor}
                             strokeWidth={scribble.strokeWidth}
                             draggable={isDraggable}
                             onClick={handleClick}
@@ -504,7 +519,7 @@ export default function Canvas() {
                         <Line
                             key={line.id}
                             points={line.points}
-                            stroke = {line.strokeColor}
+                            stroke={line.strokeColor}
                             strokeWidth={line.strokeWidth}
                             draggable={isDraggable}
                             onClick={handleClick}
@@ -518,7 +533,7 @@ export default function Canvas() {
                             x={diamond.x}
                             y={diamond.y}
                             fill={diamond.fillColor}
-                            stroke = {diamond.strokeColor}
+                            stroke={diamond.strokeColor}
                             strokeWidth={diamond.strokeWidth}
                             draggable={isDraggable}
                             onClick={handleClick}
