@@ -7,7 +7,7 @@ export const useToolboxContext = () => useContext(ToolboxContext);
 export const ToolboxProvider = ({ children }) => {
 
     const [strokeColor, setStrokeColor] = useState('black');
-    const [fillColor, setFillColor] = useState('#dda15e');
+    const [fillColor, setFillColor] = useState('white');
     const [strokeWidth, setStrokeWidth] = useState(2);
 
     return (

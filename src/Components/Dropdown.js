@@ -54,6 +54,7 @@ function Dropdown(props) {
         };
         const serializedJSON = JSON.stringify(serializedData);
         localStorage.setItem(drawingName, serializedJSON);
+        console.log(serializedData);
     }
 
     const openDrawing = ()=>{
@@ -75,7 +76,7 @@ function Dropdown(props) {
                 setScribbles(parsedData.scribbles);
                 setImages(parsedData.images);
                 setLasers(parsedData.lasers);
-                
+
                 console.log(`Drawing "${selectedDrawingName}" opened from localStorage.`);
             } else {
                 alert(`Drawing "${selectedDrawingName}" not found in localStorage.`);
