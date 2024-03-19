@@ -12,9 +12,18 @@ app.use(cors());
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('draw', (data) => {
-        // Broadcast the drawing action to all clients except the sender
-        socket.broadcast.emit('draw', data);
+    socket.on('drawShape', (shapeType, shapeData) => {
+        // Handle the drawShape event
+        console.log('Received drawShape event:', shapeType, shapeData);
+
+        // Broadcast the shape data to all connected clients except the sender
+        socket.broadcast.emit('newShape', shapeType, shapeData);
+    });
+
+    socket.on('updateShape', (shapeType, updatedShapeData) => {
+        // Broadcast the updated shape data to all connected clients except the sender
+        console.log('Received updateShape event:', shapeType, updatedShapeData);
+        socket.broadcast.emit('updateShape', shapeType, updatedShapeData);
     });
 
     socket.on('disconnect', () => {

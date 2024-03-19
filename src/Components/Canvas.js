@@ -7,14 +7,14 @@ import Menu from './Menu';
 import Konva from 'konva';
 import Toolbox from './Toolbox';
 import { useShapesContext } from '../Context/ShapesContext';
-import { io } from 'socket.io-client';
+import { useSocketContext } from '../Context/SocketContext';
 
 export default function Canvas() {
 
     const { currentAction } = useActionContext();  // Get the current Action
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
-    const socketRef = useRef();
+    const socketRef = useSocketContext();
 
     const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers } = useShapesContext();
 
@@ -26,6 +26,11 @@ export default function Canvas() {
     const transformerRef = useRef();
 
     const laserRef = useRef();
+
+    const handleDrawShape = (shapeType, shapeData) => {
+        // Emit shape draw event to the server
+        socketRef.emit('drawShape', shapeType, shapeData);
+    };
 
     const handleMouseDown = (e) => {
 
@@ -50,6 +55,16 @@ export default function Canvas() {
                     height: 0,
                     width: 0
                 }]);
+                handleDrawShape('rect', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    fillColor,
+                    x,
+                    y,
+                    height: 0,
+                    width: 0
+                });
                 break;
             case 'circle':
                 setCircles((circles) => [...circles, {
@@ -61,6 +76,15 @@ export default function Canvas() {
                     y,
                     radius: 0,
                 }]);
+                handleDrawShape('circle', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    fillColor,
+                    x,
+                    y,
+                    radius: 0,
+                });
                 break;
             case 'arrow':
                 setArrows((arrows) => [...arrows, {
@@ -69,6 +93,12 @@ export default function Canvas() {
                     strokeColor,
                     points: [x, y, x + 20, y + 20]
                 }]);
+                handleDrawShape('arrow', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    points: [x, y, x + 20, y + 20]
+                });
                 break;
             case 'pen':
                 setScribbles((scribbles) => [...scribbles, {
@@ -77,6 +107,12 @@ export default function Canvas() {
                     strokeColor,
                     points: [x, y]
                 }]);
+                handleDrawShape('pen', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    points: [x, y]
+                });
                 break;
             case 'line':
                 setLines((lines) => [...lines, {
@@ -85,6 +121,12 @@ export default function Canvas() {
                     strokeColor,
                     points: [x, y, x, y]
                 }]);
+                handleDrawShape('line', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    points: [x, y]
+                });
                 break;
             case 'diamond':
                 setDiamonds((diamonds) => [...diamonds, {
@@ -96,6 +138,15 @@ export default function Canvas() {
                     y,
                     radius: 0
                 }]);
+                handleDrawShape('diamond', {
+                    id,
+                    strokeWidth,
+                    strokeColor,
+                    fillColor,
+                    x,
+                    y,
+                    radius: 0
+                });
                 break;
             case 'image':
                 const input = document.createElement('input');
@@ -112,6 +163,10 @@ export default function Canvas() {
                     id,
                     points: [x, y]
                 }]);
+                handleDrawShape('laser', {
+                    id,
+                    points: [x, y]
+                });
                 break;
             default:
                 return null;
@@ -155,11 +210,13 @@ export default function Canvas() {
                 setRectangles((rectangles) =>
                     rectangles.map((rectangle) => {
                         if (rectangle.id === currentShapeId.current) {
-                            return {
+                            const updatedShapeData = {
                                 ...rectangle,
                                 width: x - rectangle.x,
                                 height: y - rectangle.y
                             };
+                            socketRef.emit('updateShape', 'rect', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return rectangle;
                     })
@@ -169,10 +226,12 @@ export default function Canvas() {
                 setCircles((circles) =>
                     circles.map((circle) => {
                         if (circle.id === currentShapeId.current) {
-                            return {
+                            const updatedShapeData = {
                                 ...circle,
                                 radius: Math.sqrt((y - circle.y) ** 2 + (x - circle.x) ** 2),
                             };
+                            socketRef.emit('updateShape', 'circle', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return circle;
                     })
@@ -182,10 +241,12 @@ export default function Canvas() {
                 setArrows((arrows) =>
                     arrows.map((arrow) => {
                         if (arrow.id === currentShapeId.current) {
-                            return {
+                            const updatedShapeData = {
                                 ...arrow,
                                 points: [arrow.points[0], arrow.points[1], x, y],
-                            }
+                            };
+                            socketRef.emit('updateShape', 'arrow', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return arrow;
                     })
@@ -195,10 +256,12 @@ export default function Canvas() {
                 setScribbles((scribbles) =>
                     scribbles.map((scribble) => {
                         if (scribble.id === currentShapeId.current) {
-                            return {
+                            const updatedShapeData = {
                                 ...scribble,
                                 points: [...scribble.points, x, y],
-                            }
+                            };
+                            socketRef.emit('updateShape', 'pen', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return scribble;
                     })
@@ -208,10 +271,12 @@ export default function Canvas() {
                 setLines((lines) =>
                     lines.map((line) => {
                         if (line.id === currentShapeId.current) {
-                            return {
+                            const updatedShapeData = {
                                 ...line,
-                                points: [line.points[0], line.points[1], x, y]
-                            }
+                                points: [line.points[0], line.points[1], x, y],
+                            };
+                            socketRef.emit('updateShape', 'line', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return line;
                     })
@@ -221,7 +286,12 @@ export default function Canvas() {
                 setDiamonds((diamonds) =>
                     diamonds.map((diamond) => {
                         if (diamond.id === currentShapeId.current) {
-                            return { ...diamond, radius: Math.max(Math.abs(x - diamond.x), Math.abs(y - diamond.y)) };
+                            const updatedShapeData = {
+                                ...diamond,
+                                radius: Math.max(Math.abs(x - diamond.x), Math.abs(y - diamond.y)),
+                            };
+                            socketRef.emit('updateShape', 'diamond', updatedShapeData);
+                            return updatedShapeData;
                         }
                         return diamond;
                     })
@@ -428,20 +498,81 @@ export default function Canvas() {
         }
     }, [lasers]);
 
-    useEffect(() => {
-        try {
-            socketRef.current = io('http://localhost:5000/');
-            return () => {
-                socketRef.current.disconnect(); // Disconnect the socket when the component unmounts
-            };
-
-        } catch (error) {
-            alert(error)
+    // Set up event listener for 'drawShape' inside the useEffect
+    // console.log(socketRef)
+    // Event listener for updateShape event
+    socketRef.on('updateShape', (shapeType, updatedShapeData) => {
+        switch (shapeType) {
+            case 'rect':
+                setRectangles((rectangles) =>
+                    rectangles.map((rectangle) => (1 ? { ...rectangle, ...updatedShapeData } : rectangle))
+                );
+                break;
+            case 'circle':
+                setCircles((circles) =>
+                    circles.map((circle) => (1 ? { ...circle, ...updatedShapeData } : circle))
+                );
+                break;
+            case 'arrow':
+                setArrows((arrows) =>
+                    arrows.map((arrow) => (1 ? { ...arrow, ...updatedShapeData } : arrow))
+                );
+                break;
+            case 'pen':
+                console.log(scribbles)
+                setScribbles((scribbles) =>
+                    scribbles.map((scribble) => (1 ? { ...scribble, ...updatedShapeData }  : scribble))
+                );
+                console.log(scribbles)
+                break;
+            case 'line':
+                setLines((lines) =>
+                    lines.map((line) => (1 ? { ...line, ...updatedShapeData } : line))
+                );
+                break;
+            case 'diamond':
+                setDiamonds((diamonds) =>
+                    diamonds.map((diamond) => (1 ? { ...diamond, ...updatedShapeData } : diamond))
+                );
+                break;
+            case 'laser':
+                setLasers((lasers) =>
+                    lasers.map((laser) => (1 ? { ...laser, ...updatedShapeData } : laser))
+                );
+                break;
+            default:
+                break;
         }
+    });
 
-
-    }, [])
-
+    socketRef.on('drawShape', (shapeType, shapeData) => {
+        // Add the new shape to the canvas on the client side
+        switch (shapeType) {
+            case 'rect':
+                setRectangles((rectangles) => [...rectangles, shapeData]);
+                break;
+            case 'circle':
+                setCircles((circles) => [...circles, shapeData]);
+                break;
+            case 'arrow':
+                setArrows((arrows) => [...arrows, shapeData]);
+                break;
+            case 'pen':
+                setScribbles((scribbles) => [...scribbles, shapeData]);
+                break;
+            case 'line':
+                setLines((lines) => [...lines, shapeData]);
+                break;
+            case 'diamond':
+                setDiamonds((diamonds) => [...diamonds, shapeData]);
+                break;
+            case 'laser':
+                setLasers((lasers) => [...lasers, shapeData]);
+                break;
+            default:
+                break;
+        }
+    });
 
     return (
         <>
