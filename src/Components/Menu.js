@@ -5,7 +5,7 @@ import Library from './Library'
 
 function Menu(props) {
     return (
-        <div class="d-flex justify-content-between" style={{ marginTop: '17px' }}>
+        <div className="d-flex justify-content-between" style={{ marginTop: '17px' }}>
         <Dropdown stageRef={props.stageRef}/>
         <Navbar/>
         <Library/>
