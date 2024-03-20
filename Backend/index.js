@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
         console.log('Received drawShape event:', shapeType, shapeData);
 
         // Broadcast the shape data to all connected clients except the sender
-        socket.broadcast.emit('newShape', shapeType, shapeData);
+        socket.broadcast.emit('drawShape', shapeType, shapeData);
     });
 
     socket.on('updateShape', (shapeType, updatedShapeData) => {
