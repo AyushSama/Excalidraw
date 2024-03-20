@@ -11,7 +11,7 @@ import { useSocketContext } from '../Context/SocketContext';
 
 export default function Canvas() {
 
-    const { currentAction } = useActionContext();  // Get the current Action
+    const { currentAction , enableTools } = useActionContext();  // Get the current Action
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
     const socketRef = useSocketContext();
@@ -585,7 +585,7 @@ export default function Canvas() {
     return (
         <>
             <Menu stageRef={stageRef} />
-            {toolBox && <Toolbox />}
+            {enableTools.current && toolBox && <Toolbox />}
             <Stage ref={stageRef}
                 width={window.innerWidth}
                 height={window.innerHeight}

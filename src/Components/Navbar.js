@@ -17,11 +17,11 @@ import {ReactComponent as Tools }  from '../Logo/Navbar/gear.svg'
 
 function Navbar() {
 
-  const {changeAction} = useActionContext();
+  const {changeAction , enableTools} = useActionContext();
 
   return (
     <div className="d-flex justify-content-center">
-        <button type="button" className="btn btn-light"><Lock  style={{margin:'3px'}}/></button>
+        <button onClick={() => (enableTools.current=!enableTools.current)} type="button" className="btn btn-light"><Lock  style={{margin:'3px'}}/></button>
         <button onClick={() => changeAction('pan')} type="button" className="btn btn-light"><Pan  style={{margin:'3px'}}/></button>
         <button onClick={() => changeAction('cursor')} type="button" className="btn btn-light"><Cursor  style={{margin:'3px'}}/></button>
         <button onClick={() => changeAction('rect')} type="button" className="btn btn-light"><Rectangle  style={{margin:'3px'}}/></button>
