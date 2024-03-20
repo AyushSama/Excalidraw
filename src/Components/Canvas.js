@@ -210,7 +210,7 @@ export default function Canvas() {
                 setRectangles((rectangles) =>
                     rectangles.map((rectangle) => {
                         if (rectangle.id === currentShapeId.current) {
-                            const updatedShapeData = {
+                            const updatedShapeData = {  
                                 ...rectangle,
                                 width: x - rectangle.x,
                                 height: y - rectangle.y
@@ -335,12 +335,20 @@ export default function Canvas() {
         // Iterate over each shape and check if the mouse is over it
         const updatedRectangles = rectangles.filter((rectangle) => {
             const { x, y, width, height } = rectangle;
+            // Calculate the rightmost and bottom coordinates
+            const rightX = x + width;
+            const bottomY = y + height;
             // Check if the mouse coordinates are within the bounds of the shape
-            if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+            const minX = Math.min(x, rightX); // Get the leftmost x coordinate
+            const maxX = Math.max(x, rightX); // Get the rightmost x coordinate
+            const minY = Math.min(y, bottomY); // Get the topmost y coordinate
+            const maxY = Math.max(y, bottomY); // Get the bottommost y coordinate
+            if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
                 return false; // Remove the rectangle
             }
             return true; // Keep the rectangle
         });
+        
 
         // Update the state with the filtered rectangles
         setRectangles(updatedRectangles);
