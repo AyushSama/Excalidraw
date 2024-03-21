@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react'
-import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon, Image } from 'react-konva';
+import React, { useRef, useEffect, useState } from 'react'
+import { Stage, Layer, Line, Circle, Arrow, Rect, Transformer, RegularPolygon, Image, Text } from 'react-konva';
 import { useActionContext } from '../Context/ActionContext'
 import { useToolboxContext } from '../Context/ToolboxContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,10 +14,14 @@ export default function Canvas() {
     const { currentAction, enableTools } = useActionContext();  // Get the current Action
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
+    const textareaRef = useRef();
     const socketRef = useSocketContext();
 
-    const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers } = useShapesContext();
+    const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers, texts, setTexts } = useShapesContext();
 
+    const [write, setWrite] = useState(false);
+    const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
+    const [textValue , setTextValue] = useState('');
     const isDraggable = currentAction === 'cursor';
     const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
     const toolBox = !excludedActions.includes(currentAction);
@@ -168,11 +172,39 @@ export default function Canvas() {
                     points: [x, y]
                 });
                 break;
+            case 'text':
+                setWrite(true);
+                setTextPosition({x,y})
+                break;
             default:
                 return null;
         }
 
     }
+
+    const handleText = (e)=>{
+        setTextValue(e.target.value);
+    }
+
+    const handleTextChange = (value , x, y , height, width , size) => {
+        const id = uuidv4(); // Generate unique ID for the text element
+        const newText = {
+            id,
+            text: value, // Initial text content
+            x,
+            y,
+            fontSize:size, // Set initial font family (adjust as needed)
+            fill: '#000000',
+            height,
+            width // Set initial text color (adjust as needed)
+        };
+        setTexts((prevTexts) => [...prevTexts, newText]); // Add the new text element to state
+        setWrite(false);
+        setTextValue('');
+        // Emit shape draw event to the server
+        socketRef.emit('drawShape', 'text', newText);
+    };
+
 
     const handleImageUpload = (file, x, y, id) => {
         if (file) {
@@ -435,6 +467,17 @@ export default function Canvas() {
 
         setImages(updatedImages);
 
+        const updatedTexts = texts.filter((text) => {
+            const { x, y, width, height } = text;
+            // Check if the mouse coordinates are within the bounds of the text
+            if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+                return false; // Remove the text
+            }
+            return true; // Keep the text
+        });
+    
+        setTexts(updatedTexts);
+
     };
 
     // Event listener for erasing shapes
@@ -585,15 +628,41 @@ export default function Canvas() {
             case 'laser':
                 setLasers((lasers) => [...lasers, shapeData]);
                 break;
+            case 'text':
+                setTexts((texts) => [...texts, shapeData]);
+                break;
             default:
                 break;
         }
     });
 
     return (
-        <>
-            <Menu stageRef={stageRef} />
+        <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2, width: '100%' }}>
+                <Menu stageRef={stageRef} style={{ position: 'absolute', top: 0, left: 0 }} />
+            { write && <button style={{marginTop:'10px'}} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth , 40)}>Add</button>}
+            </div>
+
             {enableTools && toolBox && <Toolbox />}
+            {write && (
+                        <textarea ref={textareaRef}
+                            style={{
+                                position: 'absolute',
+                                top: textPosition.y,
+                                left: textPosition.x,
+                                zIndex: 9999,
+                                fontSize:'40px',
+                                fontFamily:'Dawning of a New Day',
+                                resize: 'both', // Allow resizing both horizontally and vertically
+                                overflow: 'auto', // Set minimum height
+                                maxWidth: 'none', // Disable maximum width
+                                maxHeight: 'none', // Add border for visual clarity
+                                padding: '5px', // Add padding for content spacing
+                            }}
+                            value={textValue}
+                            onChange={(e) => handleText(e)}
+                        />
+                    )}
             <Stage ref={stageRef}
                 width={window.innerWidth}
                 height={window.innerHeight}
@@ -610,6 +679,7 @@ export default function Canvas() {
                         id="bg"
                         onClick={() => {
                             transformerRef.current.nodes([]);
+                            setWrite(false);
                         }}
                     />
                     {rectangles.map((rectangle) => (
@@ -709,9 +779,23 @@ export default function Canvas() {
                             strokeWidth={5}
                         />
                     ))}
+                    {texts.map((text) => (
+                        <Text
+                            key={text.id}
+                            text={text.text}
+                            x={text.x}
+                            y={text.y}
+                            draggable={isDraggable}
+                            onClick={handleClick}
+                            height={text.height}
+                            width={text.width}
+                            fontSize={text.fontSize}
+                            fontFamily="Dawning of a New Day"
+                        />
+                    ))}
                     <Transformer ref={transformerRef} />
                 </Layer>
             </Stage>
-        </>
+        </div>
     )
 }

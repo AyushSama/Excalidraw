@@ -14,9 +14,10 @@ export const ShapesProvider = ({ children }) => {
     const [scribbles, setScribbles] = useState([]);
     const [images, setImages] = useState([]);
     const [lasers, setLasers] = useState([]);
+    const [texts, setTexts] = useState([]);
 
   return (
-    <ShapesContext.Provider value={{rectangles ,setRectangles,circles,setCircles,arrows,setArrows,diamonds,setDiamonds,lines,setLines,scribbles,setScribbles,images,setImages,lasers,setLasers}}>
+    <ShapesContext.Provider value={{rectangles ,setRectangles,circles,setCircles,arrows,setArrows,diamonds,setDiamonds,lines,setLines,scribbles,setScribbles,images,setImages,lasers,setLasers,texts,setTexts}}>
       {children}
     </ShapesContext.Provider>
   );
