@@ -6,7 +6,7 @@ import './Menu.css'
 
 function Menu(props) {
     return (
-        <nav className='navbar' style={{ marginTop: '17px' }} >
+        <nav className='navbar' style={{marginTop: '17px', marginBottom: '3px' }} >
             <Dropdown stageRef={props.stageRef} />
             <Navbar />
             <Library />

@@ -21,7 +21,7 @@ export default function Canvas() {
 
     const [write, setWrite] = useState(false);
     const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
-    const [textValue , setTextValue] = useState('');
+    const [textValue, setTextValue] = useState('');
     const isDraggable = currentAction === 'cursor';
     const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
     const toolBox = !excludedActions.includes(currentAction);
@@ -174,7 +174,7 @@ export default function Canvas() {
                 break;
             case 'text':
                 setWrite(true);
-                setTextPosition({x,y})
+                setTextPosition({ x, y })
                 break;
             default:
                 return null;
@@ -182,18 +182,18 @@ export default function Canvas() {
 
     }
 
-    const handleText = (e)=>{
+    const handleText = (e) => {
         setTextValue(e.target.value);
     }
 
-    const handleTextChange = (value , x, y , height, width , size) => {
+    const handleTextChange = (value, x, y, height, width, size) => {
         const id = uuidv4(); // Generate unique ID for the text element
         const newText = {
             id,
             text: value, // Initial text content
             x,
             y,
-            fontSize:size, // Set initial font family (adjust as needed)
+            fontSize: size, // Set initial font family (adjust as needed)
             fill: '#000000',
             height,
             width // Set initial text color (adjust as needed)
@@ -475,7 +475,7 @@ export default function Canvas() {
             }
             return true; // Keep the text
         });
-    
+
         setTexts(updatedTexts);
 
     };
@@ -637,35 +637,31 @@ export default function Canvas() {
     });
 
     return (
-        <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2, width: '100%' }}>
-                <Menu stageRef={stageRef} style={{ position: 'absolute', top: 0, left: 0 }} />
-            { write && <button style={{marginTop:'10px'}} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth , 40)}>Add</button>}
-            </div>
-
-            {enableTools && toolBox && <Toolbox />}
+        <div >
+            <Menu stageRef={stageRef} />
+            {write && <button style={{ marginTop: '10px' }} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth, 40)}>Add</button>}            {enableTools && toolBox && <Toolbox />}
             {write && (
-                        <textarea ref={textareaRef}
-                            style={{
-                                position: 'absolute',
-                                top: textPosition.y,
-                                left: textPosition.x,
-                                zIndex: 9999,
-                                fontSize:'40px',
-                                fontFamily:'Dawning of a New Day',
-                                resize: 'both', // Allow resizing both horizontally and vertically
-                                overflow: 'auto', // Set minimum height
-                                maxWidth: 'none', // Disable maximum width
-                                maxHeight: 'none', // Add border for visual clarity
-                                padding: '5px', // Add padding for content spacing
-                            }}
-                            value={textValue}
-                            onChange={(e) => handleText(e)}
-                        />
-                    )}
+                <textarea ref={textareaRef}
+                    style={{
+                        position: 'absolute',
+                        top: textPosition.y,
+                        left: textPosition.x,
+                        zIndex: 9999,
+                        fontSize: '40px',
+                        fontFamily: 'Dawning of a New Day',
+                        resize: 'both', // Allow resizing both horizontally and vertically
+                        overflow: 'auto', // Set minimum height
+                        maxWidth: 'none', // Disable maximum width
+                        maxHeight: 'none', // Add border for visual clarity
+                        padding: '5px', // Add padding for content spacing
+                    }}
+                    value={textValue}
+                    onChange={(e) => handleText(e)}
+                />
+            )}
             <Stage ref={stageRef}
-                width={window.innerWidth}
                 height={window.innerHeight}
+                width={window.innerWidth}
                 onMouseMove={handleMouseMove}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}>
