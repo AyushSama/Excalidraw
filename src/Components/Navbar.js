@@ -17,24 +17,35 @@ import {ReactComponent as Tools }  from '../Logo/Navbar/gear.svg'
 
 function Navbar() {
 
+  const navButtons = document.querySelectorAll('.nav-button');
+
+  navButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      navButtons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+    });
+  });
+
   const {changeAction , enableTools , setEnableTools} = useActionContext();
 
   return (
-    <div className="d-flex justify-content-center">
-        {enableTools && <button onClick={() => {setEnableTools(prev => !prev)} } type="button" className="btn btn-light"><Lock  style={{margin:'3px'}}/></button>}
-        {!enableTools && <button onClick={() => {setEnableTools(prev => !prev)} } type="button" className="btn btn-light"><Unlock  style={{margin:'3px'}}/></button>}
-        <button onClick={() => changeAction('pan')} type="button" className="btn btn-light"><Pan  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('cursor')} type="button" className="btn btn-light"><Cursor  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('rect')} type="button" className="btn btn-light"><Rectangle  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('diamond')} type="button" className="btn btn-light"><Diamond  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('circle')} type="button" className="btn btn-light"><Circle  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('arrow')} type="button" className="btn btn-light"><Arrow  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('line')} type="button" className="btn btn-light"><Line  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('pen')} type="button" className="btn btn-light"><Pen  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('text')} type="button" className="btn btn-light"><Text  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('image')} type="button" className="btn btn-light"><InsertImage  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('eraser')} type="button" className="btn btn-light"><Eraser  style={{margin:'3px'}}/></button>
-        <button onClick={() => changeAction('laser')} type="button" className="btn btn-light"><Tools  style={{margin:'3px'}}/></button>
+    <div className="nav-buttons">
+        {enableTools && <button onClick={() => {setEnableTools(prev => !prev)}} type="button" className="nav-button"><Lock  /></button>}
+        {!enableTools && <button onClick={() => {setEnableTools(prev => !prev)} } type="button" className="nav-button"><Unlock  /></button>}
+        <button onClick={() => changeAction('pan')} type="button" className="nav-button"><Pan  /></button>
+        <button onClick={() => changeAction('cursor')} type="button" className="nav-button selected"><Cursor  /></button>
+        <div class="divider"></div>
+        <button onClick={() => changeAction('rect')} type="button" className="nav-button"><Rectangle  /></button>
+        <button onClick={() => changeAction('diamond')} type="button" className="nav-button"><Diamond  /></button>
+        <button onClick={() => changeAction('circle')} type="button" className="nav-button"><Circle  /></button>
+        <button onClick={() => changeAction('arrow')} type="button" className="nav-button"><Arrow  /></button>
+        <button onClick={() => changeAction('line')} type="button" className="nav-button"><Line  /></button>
+        <button onClick={() => changeAction('pen')} type="button" className="nav-button"><Pen  /></button>
+        <button onClick={() => changeAction('text')} type="button" className="nav-button"><Text  /></button>
+        <button onClick={() => changeAction('image')} type="button" className="nav-button"><InsertImage  /></button>
+        <button onClick={() => changeAction('eraser')} type="button" className="nav-button"><Eraser  /></button>
+        <div class="divider"></div>
+        <button onClick={() => changeAction('laser')} type="button" className="nav-button"><Tools  /></button>
     </div>
   )
 }

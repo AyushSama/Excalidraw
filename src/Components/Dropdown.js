@@ -89,9 +89,8 @@ function Dropdown(props) {
 
     return (
         <div className="dropdown">
-            <button className="btn btn-outline-success" type="button" data-bs-toggle="dropdown"
-                style={{ padding: '0 2px 5px 2px', marginLeft: '15px' }}>
-                <List width="35" />
+            <button className="logo" type="button" data-bs-toggle="dropdown">
+                <List/>
             </button>
             <div>
             <ul className="dropdown-menu">

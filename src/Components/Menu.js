@@ -2,14 +2,15 @@ import React from 'react'
 import Dropdown from './Dropdown'
 import Navbar from './Navbar'
 import Library from './Library'
+import './Menu.css'
 
 function Menu(props) {
     return (
-        <div className="d-flex justify-content-between" style={{ marginTop: '17px' }}>
-        <Dropdown stageRef={props.stageRef}/>
-        <Navbar/>
-        <Library/>
-        </div>
+        <nav className='navbar' style={{ marginTop: '17px' }} >
+            <Dropdown stageRef={props.stageRef} />
+            <Navbar />
+            <Library />
+        </nav>
     )
 }
 
