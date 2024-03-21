@@ -26,6 +26,11 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateShape', shapeType, updatedShapeData);
     });
 
+    socket.on('eraseShapes', (mouseX, mouseY) => {
+        // Broadcast the eraseShapes event to all connected clients except the sender
+        socket.broadcast.emit('eraseShapes', mouseX, mouseY);
+    });
+
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });

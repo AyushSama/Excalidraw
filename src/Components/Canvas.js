@@ -11,7 +11,7 @@ import { useSocketContext } from '../Context/SocketContext';
 
 export default function Canvas() {
 
-    const { currentAction , enableTools } = useActionContext();  // Get the current Action
+    const { currentAction, enableTools } = useActionContext();  // Get the current Action
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
     const socketRef = useSocketContext();
@@ -210,7 +210,7 @@ export default function Canvas() {
                 setRectangles((rectangles) =>
                     rectangles.map((rectangle) => {
                         if (rectangle.id === currentShapeId.current) {
-                            const updatedShapeData = {  
+                            const updatedShapeData = {
                                 ...rectangle,
                                 width: x - rectangle.x,
                                 height: y - rectangle.y
@@ -299,6 +299,7 @@ export default function Canvas() {
                 break;
             case 'eraser':
                 handleEraser(x, y);
+                socketRef.emit('eraseShapes', x, y);
                 break;
             case 'laser':
                 setLasers((lasers) =>
@@ -348,7 +349,7 @@ export default function Canvas() {
             }
             return true; // Keep the rectangle
         });
-        
+
 
         // Update the state with the filtered rectangles
         setRectangles(updatedRectangles);
@@ -435,6 +436,13 @@ export default function Canvas() {
         setImages(updatedImages);
 
     };
+
+    // Event listener for erasing shapes
+    socketRef.on('eraseShapes', (mouseX, mouseY) => {
+        // Call the existing handleEraser function with the received mouse coordinates
+        handleEraser(mouseX, mouseY);
+    });
+
 
     const isMouseOverDiamond = (mouseX, mouseY, diamondX, diamondY, diamondRadius) => {
         // Calculate the distances from the mouse coordinates to the center of the diamond
@@ -529,7 +537,7 @@ export default function Canvas() {
             case 'pen':
                 console.log(scribbles)
                 setScribbles((scribbles) =>
-                    scribbles.map((scribble) => (1 ? { ...scribble, ...updatedShapeData }  : scribble))
+                    scribbles.map((scribble) => (1 ? { ...scribble, ...updatedShapeData } : scribble))
                 );
                 console.log(scribbles)
                 break;
