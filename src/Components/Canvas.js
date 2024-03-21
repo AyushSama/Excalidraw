@@ -593,7 +593,7 @@ export default function Canvas() {
     return (
         <>
             <Menu stageRef={stageRef} />
-            {enableTools.current && toolBox && <Toolbox />}
+            {enableTools && toolBox && <Toolbox />}
             <Stage ref={stageRef}
                 width={window.innerWidth}
                 height={window.innerHeight}
