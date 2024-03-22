@@ -15,7 +15,7 @@ export default function Canvas() {
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
     const textareaRef = useRef();
-    const {socket , sessionCode} = useSocketContext();
+    const {socket , sessionCode , disconnect , setDisconnect} = useSocketContext();
 
     const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers, texts, setTexts } = useShapesContext();
 
@@ -634,10 +634,17 @@ export default function Canvas() {
         }
     });
 
+    const disconnectSocket = ()=>{
+        socket.emit('disconnectClient');
+        setDisconnect(false);
+    }
+
     return (
         <div >
             <Menu stageRef={stageRef} />
-            {write && <button style={{ marginTop: '10px' }} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth, 40)}>Add</button>}            {enableTools && toolBox && <Toolbox />}
+            {write && <button style={{ marginTop: '10px' , marginRight:'10px' }} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth, 40)}>Add Text</button>}            
+            {disconnect && <button style={{ marginTop: '10px' }} className='btn btn-outline-danger' onClick={()=>disconnectSocket()}>Disconnect Live Collab</button>}            
+            {enableTools && toolBox && <Toolbox />}
             {write && (
                 <textarea ref={textareaRef}
                     style={{

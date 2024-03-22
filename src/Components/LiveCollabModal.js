@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './LiveCollabModal.css'
 import { ReactComponent as Collab } from '../Logo/Dropdown/people-fill.svg';
 import { useSocketContext } from '../Context/SocketContext';
 
 function LiveCollabModal() {
-  const { socket, sessionCode, setSessionCode } = useSocketContext();
+  const { socket, sessionCode, setSessionCode, setDisconnect } = useSocketContext();
 
   const handleCreateSession = () => {
     // Send the create session request to the server
@@ -36,13 +36,13 @@ function LiveCollabModal() {
 
   if (socket) {
     socket.on('sessionCreated', (creatorCode) => {
-      alert('Successfully Created Session - ' + creatorCode);
+      setDisconnect(true);
     })
   }
 
   if (socket) {
     socket.on('sessionJoined', (sessionCode) => {
-      alert('Successfully Joined Session - ' + sessionCode);
+      setDisconnect(true)
     })
   }
 

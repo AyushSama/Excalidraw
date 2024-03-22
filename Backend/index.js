@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnectClient', () => {
         console.log('A user disconnected');
         // Remove the user's session code from the map upon disconnection
         io.emit('userDisconnected', socket.id);
