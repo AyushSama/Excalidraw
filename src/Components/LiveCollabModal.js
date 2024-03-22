@@ -4,10 +4,14 @@ import { ReactComponent as Collab } from '../Logo/Dropdown/people-fill.svg';
 import { useSocketContext } from '../Context/SocketContext';
 
 function LiveCollabModal() {
-  const {socket , sessionCode , setSessionCode} = useSocketContext();
+  const { socket, sessionCode, setSessionCode } = useSocketContext();
 
   const handleCreateSession = () => {
     // Send the create session request to the server
+    if (sessionCode.length < 4) {
+      alert('Code must be greater than 3 character.');
+      return;
+    }
     if (socket) {
       socket.emit('createSession', sessionCode);
       console.log(sessionCode)
@@ -18,6 +22,10 @@ function LiveCollabModal() {
 
   const handleJoinSession = () => {
     // Send the join session request to the server
+    if (sessionCode.length < 4) {
+      alert('Code must be greater than 3 character.');
+      return;
+    }
     if (socket) {
       socket.emit('joinSession', sessionCode);
       console.log(sessionCode)
@@ -26,18 +34,22 @@ function LiveCollabModal() {
       console.log('Socket is Undefined')
   };
 
-  if(socket){
-    socket.on('sessionCreated',(creatorCode)=>{
+  if (socket) {
+    socket.on('sessionCreated', (creatorCode) => {
       alert('Successfully Created Session - ' + creatorCode);
     })
   }
 
-  if(socket){
-    socket.on('sessionJoined',(sessionCode)=>{
+  if (socket) {
+    socket.on('sessionJoined', (sessionCode) => {
       alert('Successfully Joined Session - ' + sessionCode);
     })
   }
 
+  socket.on('userDisconnected', (disconnectedUserId) => {
+    console.log(`User with ID ${disconnectedUserId} disconnected.`);
+    // You can perform any necessary actions here, such as updating UI to reflect the disconnection
+  });
 
   return (
     <div>

@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('A user disconnected');
         // Remove the user's session code from the map upon disconnection
+        io.emit('userDisconnected', socket.id);
         sessionCodes.forEach((value, key) => {
             if (socket.rooms.has(key)) {
                 sessionCodes.delete(key);
