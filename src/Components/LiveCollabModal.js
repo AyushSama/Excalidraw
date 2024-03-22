@@ -26,6 +26,18 @@ function LiveCollabModal() {
       console.log('Socket is Undefined')
   };
 
+  if(socket){
+    socket.on('sessionCreated',(creatorCode)=>{
+      alert('Successfully Created Session - ' + creatorCode);
+    })
+  }
+
+  if(socket){
+    socket.on('sessionJoined',(sessionCode)=>{
+      alert('Successfully Joined Session - ' + sessionCode);
+    })
+  }
+
 
   return (
     <div>

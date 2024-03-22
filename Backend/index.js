@@ -13,11 +13,13 @@ app.use(cors());
 const sessionCodes = new Map();
 
 // Socket.IO events
+// Socket.IO events
 io.on('connection', (socket) => {
     console.log('A user connected');
 
     socket.on('createSession', (creatorCode) => {
         sessionCodes.set(creatorCode, true); // Store the creator code in the map
+        socket.join(creatorCode);
         socket.emit('sessionCreated', creatorCode);
     });
 
@@ -35,6 +37,7 @@ io.on('connection', (socket) => {
         if (socket.rooms.has(sessionCode)) {
             // Broadcast the shape data to all connected clients in the session
             io.to(sessionCode).emit('drawShape', shapeType, shapeData);
+            console.log(`User ${socket.id} drew a ${shapeType} shape in session ${sessionCode}`);
         } else {
             console.log('Unauthorized attempt to draw shape.');
         }
@@ -44,6 +47,7 @@ io.on('connection', (socket) => {
         if (socket.rooms.has(sessionCode)) {
             // Broadcast the updated shape data to all connected clients in the session
             io.to(sessionCode).emit('updateShape', shapeType, updatedShapeData);
+            console.log(`User ${socket.id} updated a ${shapeType} shape in session ${sessionCode}`);
         } else {
             console.log('Unauthorized attempt to update shape.');
         }
@@ -53,6 +57,7 @@ io.on('connection', (socket) => {
         if (socket.rooms.has(sessionCode)) {
             // Broadcast the eraseShapes event to all connected clients in the session
             io.to(sessionCode).emit('eraseShapes', mouseX, mouseY);
+            console.log(`User ${socket.id} erased shapes in session ${sessionCode}`);
         } else {
             console.log('Unauthorized attempt to erase shapes.');
         }
@@ -68,6 +73,7 @@ io.on('connection', (socket) => {
         });
     });
 });
+
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
