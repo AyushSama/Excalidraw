@@ -34,7 +34,7 @@ function Navbar() {
         {!enableTools && <button onClick={() => {setEnableTools(prev => !prev)} } type="button" className="nav-button"><Unlock  /></button>}
         <button onClick={() => changeAction('pan')} type="button" className="nav-button"><Pan  /></button>
         <button onClick={() => changeAction('cursor')} type="button" className="nav-button selected"><Cursor  /></button>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <button onClick={() => changeAction('rect')} type="button" className="nav-button"><Rectangle  /></button>
         <button onClick={() => changeAction('diamond')} type="button" className="nav-button"><Diamond  /></button>
         <button onClick={() => changeAction('circle')} type="button" className="nav-button"><Circle  /></button>
@@ -44,7 +44,7 @@ function Navbar() {
         <button onClick={() => changeAction('text')} type="button" className="nav-button"><Text  /></button>
         <button onClick={() => changeAction('image')} type="button" className="nav-button"><InsertImage  /></button>
         <button onClick={() => changeAction('eraser')} type="button" className="nav-button"><Eraser  /></button>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <button onClick={() => changeAction('laser')} type="button" className="nav-button"><Tools  /></button>
     </div>
   )

@@ -7,17 +7,17 @@ import { SocketProvider } from './Context/SocketContext';
 
 function App() {
   return (
-    <ActionProvider>
-      <ToolboxProvider>
-        <ShapesProvider>
-          <SocketProvider>
+    <SocketProvider>
+      <ActionProvider>
+        <ToolboxProvider>
+          <ShapesProvider>
             <div className="App">
               <Canvas />
             </div>
-          </SocketProvider>
-        </ShapesProvider>
-      </ToolboxProvider>
-    </ActionProvider>
+          </ShapesProvider>
+        </ToolboxProvider>
+      </ActionProvider>
+    </SocketProvider>
   );
 }
 

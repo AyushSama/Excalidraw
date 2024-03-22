@@ -15,7 +15,7 @@ export default function Canvas() {
     const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
     const textareaRef = useRef();
-    const socketRef = useSocketContext();
+    const {socket} = useSocketContext();
 
     const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers, texts, setTexts } = useShapesContext();
 
@@ -33,7 +33,7 @@ export default function Canvas() {
 
     const handleDrawShape = (shapeType, shapeData) => {
         // Emit shape draw event to the server
-        socketRef.emit('drawShape', shapeType, shapeData);
+        socket.emit('drawShape', shapeType, shapeData);
     };
 
     const handleMouseDown = (e) => {
@@ -202,7 +202,7 @@ export default function Canvas() {
         setWrite(false);
         setTextValue('');
         // Emit shape draw event to the server
-        socketRef.emit('drawShape', 'text', newText);
+        socket.emit('drawShape', 'text', newText);
     };
 
 
@@ -247,7 +247,7 @@ export default function Canvas() {
                                 width: x - rectangle.x,
                                 height: y - rectangle.y
                             };
-                            socketRef.emit('updateShape', 'rect', updatedShapeData);
+                            socket.emit('updateShape', 'rect', updatedShapeData);
                             return updatedShapeData;
                         }
                         return rectangle;
@@ -262,7 +262,7 @@ export default function Canvas() {
                                 ...circle,
                                 radius: Math.sqrt((y - circle.y) ** 2 + (x - circle.x) ** 2),
                             };
-                            socketRef.emit('updateShape', 'circle', updatedShapeData);
+                            socket.emit('updateShape', 'circle', updatedShapeData);
                             return updatedShapeData;
                         }
                         return circle;
@@ -277,7 +277,7 @@ export default function Canvas() {
                                 ...arrow,
                                 points: [arrow.points[0], arrow.points[1], x, y],
                             };
-                            socketRef.emit('updateShape', 'arrow', updatedShapeData);
+                            socket.emit('updateShape', 'arrow', updatedShapeData);
                             return updatedShapeData;
                         }
                         return arrow;
@@ -292,7 +292,7 @@ export default function Canvas() {
                                 ...scribble,
                                 points: [...scribble.points, x, y],
                             };
-                            socketRef.emit('updateShape', 'pen', updatedShapeData);
+                            socket.emit('updateShape', 'pen', updatedShapeData);
                             return updatedShapeData;
                         }
                         return scribble;
@@ -307,7 +307,7 @@ export default function Canvas() {
                                 ...line,
                                 points: [line.points[0], line.points[1], x, y],
                             };
-                            socketRef.emit('updateShape', 'line', updatedShapeData);
+                            socket.emit('updateShape', 'line', updatedShapeData);
                             return updatedShapeData;
                         }
                         return line;
@@ -322,7 +322,7 @@ export default function Canvas() {
                                 ...diamond,
                                 radius: Math.max(Math.abs(x - diamond.x), Math.abs(y - diamond.y)),
                             };
-                            socketRef.emit('updateShape', 'diamond', updatedShapeData);
+                            socket.emit('updateShape', 'diamond', updatedShapeData);
                             return updatedShapeData;
                         }
                         return diamond;
@@ -331,7 +331,7 @@ export default function Canvas() {
                 break;
             case 'eraser':
                 handleEraser(x, y);
-                socketRef.emit('eraseShapes', x, y);
+                socket.emit('eraseShapes', x, y);
                 break;
             case 'laser':
                 setLasers((lasers) =>
@@ -481,7 +481,7 @@ export default function Canvas() {
     };
 
     // Event listener for erasing shapes
-    socketRef.on('eraseShapes', (mouseX, mouseY) => {
+    socket.on('eraseShapes', (mouseX, mouseY) => {
         // Call the existing handleEraser function with the received mouse coordinates
         handleEraser(mouseX, mouseY);
     });
@@ -558,9 +558,9 @@ export default function Canvas() {
     }, [lasers]);
 
     // Set up event listener for 'drawShape' inside the useEffect
-    // console.log(socketRef)
+    // console.log(socket)
     // Event listener for updateShape event
-    socketRef.on('updateShape', (shapeType, updatedShapeData) => {
+    socket.on('updateShape', (shapeType, updatedShapeData) => {
         switch (shapeType) {
             case 'rect':
                 setRectangles((rectangles) =>
@@ -604,7 +604,7 @@ export default function Canvas() {
         }
     });
 
-    socketRef.on('drawShape', (shapeType, shapeData) => {
+    socket.on('drawShape', (shapeType, shapeData) => {
         // Add the new shape to the canvas on the client side
         switch (shapeType) {
             case 'rect':
