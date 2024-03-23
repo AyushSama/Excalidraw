@@ -14,7 +14,7 @@ export const ActionProvider = ({ children }) => {
   };
 
   return (
-    <ActionContext.Provider value={{ currentAction, changeAction , enableTools ,setEnableTools }}>
+    <ActionContext.Provider value={{ currentAction , changeAction , enableTools ,setEnableTools }}>
       {children}
     </ActionContext.Provider>
   );

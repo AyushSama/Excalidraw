@@ -11,11 +11,11 @@ import { useSocketContext } from '../Context/SocketContext';
 
 export default function Canvas() {
 
-    const { currentAction, enableTools } = useActionContext();  // Get the current Action
-    const { strokeColor, fillColor, strokeWidth } = useToolboxContext();
+    const { currentAction , changeAction, enableTools } = useActionContext();  // Get the current Action
+    const { strokeColor, fillColor, strokeWidth , backgroundColor } = useToolboxContext();
     const stageRef = useRef();   // Reference for the Stage
     const textareaRef = useRef();
-    const {socket , sessionCode , disconnect , setDisconnect} = useSocketContext();
+    const {socket , sessionCode , disconnect} = useSocketContext();
 
     const { rectangles, setRectangles, circles, setCircles, arrows, setArrows, diamonds, setDiamonds, lines, setLines, scribbles, setScribbles, images, setImages, lasers, setLasers, texts, setTexts } = useShapesContext();
 
@@ -23,7 +23,7 @@ export default function Canvas() {
     const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
     const [textValue, setTextValue] = useState('');
     const isDraggable = currentAction === 'cursor';
-    const excludedActions = ['cursor', 'laser', 'pan', 'lock', 'eraser', 'image', 'text'];
+    const excludedActions = ['cursor', 'laser', 'pan', 'lock' , 'unlock', 'eraser', 'image', 'text'];
     const toolBox = !excludedActions.includes(currentAction);
     const currentShapeId = useRef();
     const isDrawing = useRef();
@@ -354,6 +354,7 @@ export default function Canvas() {
 
     const handleMouseUp = () => {
         isDrawing.current = false;
+        changeAction('cursor')
         setLasers([]);
     }
 
@@ -635,15 +636,16 @@ export default function Canvas() {
     });
 
     const disconnectSocket = ()=>{
-        socket.emit('disconnectClient');
-        setDisconnect(false);
+        socket.disconnect();
+        // window.location.reload();
+        disconnect.current = false;
     }
 
     return (
         <div >
             <Menu stageRef={stageRef} />
             {write && <button style={{ marginTop: '10px' , marginRight:'10px' }} className='btn btn-outline-success' onClick={() => handleTextChange(textValue, textPosition.x, textPosition.y, textareaRef.current.offsetHeight, textareaRef.current.offsetWidth, 40)}>Add Text</button>}            
-            {disconnect && <button style={{ marginTop: '10px' }} className='btn btn-outline-danger' onClick={()=>disconnectSocket()}>Disconnect Live Collab</button>}            
+            {disconnect.current && <button style={{ marginTop: '10px' }} className='btn btn-outline-danger' onClick={()=>disconnectSocket()}>Disconnect Live Collab</button>}            
             {enableTools && toolBox && <Toolbox />}
             {write && (
                 <textarea ref={textareaRef}
@@ -676,7 +678,7 @@ export default function Canvas() {
                         y={0}
                         height={window.innerHeight}
                         width={window.innerWidth}
-                        fill="#ffffff"
+                        fill={backgroundColor}
                         id="bg"
                         onClick={() => {
                             transformerRef.current.nodes([]);

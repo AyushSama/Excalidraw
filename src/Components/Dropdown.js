@@ -13,8 +13,11 @@ import { ReactComponent as Github } from '../Logo/Dropdown/github.svg';
 import { ReactComponent as Twitter } from '../Logo/Dropdown/twitter-x.svg';
 import { ReactComponent as Discord } from '../Logo/Dropdown/discord.svg';
 import { ReactComponent as DarkMode } from '../Logo/Dropdown/moon.svg';
+import { useToolboxContext } from '../Context/ToolboxContext';
 
 function Dropdown(props) {
+
+    const { backgroundColor , setBackgroundColor} = useToolboxContext();
 
     const exportImage = () => {
         const stage = props.stageRef.current.getStage();
@@ -90,27 +93,33 @@ function Dropdown(props) {
     return (
         <div className="dropdown">
             <button className="logo" type="button" data-bs-toggle="dropdown">
-                <List/>
+                <List />
             </button>
             <div>
-            <ul className="dropdown-menu">
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => openDrawing()}><Open style={{ marginRight: '10px' }} />Open</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => saveDrawing()}><Save style={{ marginRight: '10px' }} />Save to...</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => exportImage()}><Export style={{ marginRight: '10px' }} />Export Image</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={()=>(document.getElementById('LiveCollabModal').click())}><Collab style={{ marginRight: '10px' }} />Live Collaboration</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Help style={{ marginRight: '10px' }} />Help</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => resetCanvas()}><Reset style={{ marginRight: '10px' }} />Reset the Canvas</button></li>
-                <hr />
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Plus style={{ marginRight: '10px' }} />Excalidraw+</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Github style={{ marginRight: '10px' }} />Github</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Twitter style={{ marginRight: '10px' }} />Follow us</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Discord style={{ marginRight: '10px' }} />Discord chat</button></li>
-                <hr />
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><DarkMode style={{ marginRight: '10px' }} />Dark mode</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light">English</button></li>
-                <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light">Background</button></li>
-            </ul>
-            <LiveCollabModal/>
+                <ul className="dropdown-menu">
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => openDrawing()}><Open style={{ marginRight: '10px' }} />Open</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => saveDrawing()}><Save style={{ marginRight: '10px' }} />Save to...</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => exportImage()}><Export style={{ marginRight: '10px' }} />Export Image</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => (document.getElementById('LiveCollabModal').click())}><Collab style={{ marginRight: '10px' }} />Live Collaboration</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Help style={{ marginRight: '10px' }} />Help</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => resetCanvas()}><Reset style={{ marginRight: '10px' }} />Reset the Canvas</button></li>
+                    <hr />
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><Plus style={{ marginRight: '10px' }} />Excalidraw+</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => { window.open('https://github.com/AyushSama', '_blank'); }} ><Github style={{ marginRight: '10px' }} />Github</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => { window.open('https://twitter.com/imnaturee', '_blank'); }} ><Twitter style={{ marginRight: '10px' }} />Follow us</button></li>
+                    <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light" onClick={() => { window.open('https://discord.gg/stZcjbN9AQ', '_blank'); }} ><Discord style={{ marginRight: '10px' }} />Discord chat</button></li>
+                    <hr />
+                    {/* <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light"><DarkMode style={{ marginRight: '10px' }} />Dark mode</button></li> */}
+                    {/* <li style={{ padding: '2px 5px 2px 5px ' }} ><button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light">English</button></li> */}
+                    <li style={{ padding: '2px 5px 2px 5px' }}>
+                        <button style={{ width: '200px', textAlign: 'left' }} type="button" className="btn btn-light">
+                            <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>Background</span>
+                            <input onChange={(e)=>(setBackgroundColor(e.target.value))} type="color" id="backgroundColorPicker" name="colorPicker" value={backgroundColor} style={{ verticalAlign: 'middle', marginLeft: '5px' }} />
+                        </button>
+                    </li>
+
+                </ul>
+                <LiveCollabModal />
             </div>
         </div>
     )

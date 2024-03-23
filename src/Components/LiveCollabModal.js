@@ -4,7 +4,7 @@ import { ReactComponent as Collab } from '../Logo/Dropdown/people-fill.svg';
 import { useSocketContext } from '../Context/SocketContext';
 
 function LiveCollabModal() {
-  const { socket, sessionCode, setSessionCode, setDisconnect } = useSocketContext();
+  const { socket, sessionCode, setSessionCode, disconnect } = useSocketContext();
 
   const handleCreateSession = () => {
     // Send the create session request to the server
@@ -14,7 +14,7 @@ function LiveCollabModal() {
     }
     if (socket) {
       socket.emit('createSession', sessionCode);
-      console.log(sessionCode)
+      checkConnection();
     }
     else
       console.log('Socket is Undefined')
@@ -28,23 +28,27 @@ function LiveCollabModal() {
     }
     if (socket) {
       socket.emit('joinSession', sessionCode);
-      console.log(sessionCode)
+      checkConnection();
     }
     else
-      console.log('Socket is Undefined')
-  };
+    console.log('Socket is Undefined')
+};
 
+const checkConnection = ()=>{
   if (socket) {
     socket.on('sessionCreated', (creatorCode) => {
-      setDisconnect(true);
+      // setDisconnect(true);
+      alert('Session Created!!');
+      disconnect.current = true;
     })
-  }
-
-  if (socket) {
     socket.on('sessionJoined', (sessionCode) => {
-      setDisconnect(true)
-    })
+      // setDisconnect(true)
+      alert('Session Joined!!');
+      disconnect.current = true;
+      })
+    }
   }
+  
 
   socket.on('userDisconnected', (disconnectedUserId) => {
     console.log(`User with ID ${disconnectedUserId} disconnected.`);
