@@ -358,7 +358,7 @@ export default function Canvas() {
         setLasers([]);
     }
 
-    const handleClick = (e) => {
+    const handleRotateAndDragDrop = (e) => {
         if (currentAction !== 'cursor')
             return;
         const target = e.currentTarget;
@@ -669,6 +669,9 @@ export default function Canvas() {
             <Stage ref={stageRef}
                 height={window.innerHeight}
                 width={window.innerWidth}
+                onTouchStart={(handleMouseDown)}
+                onTouchMove={(handleMouseMove)}
+                onTouchEnd={handleMouseUp}
                 onMouseMove={handleMouseMove}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}>
@@ -696,7 +699,8 @@ export default function Canvas() {
                             strokeWidth={rectangle.strokeWidth}
                             fill={rectangle.fillColor}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
 
@@ -710,7 +714,8 @@ export default function Canvas() {
                             strokeWidth={circle.strokeWidth}
                             fill={circle.fillColor}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {arrows.map((arrow) => (
@@ -720,7 +725,8 @@ export default function Canvas() {
                             stroke={arrow.strokeColor}
                             strokeWidth={arrow.strokeWidth}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {scribbles.map((scribble) => (
@@ -732,7 +738,8 @@ export default function Canvas() {
                             stroke={scribble.strokeColor}
                             strokeWidth={scribble.strokeWidth}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {lines.map((line) => (
@@ -742,7 +749,8 @@ export default function Canvas() {
                             stroke={line.strokeColor}
                             strokeWidth={line.strokeWidth}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {diamonds.map((diamond) => (
@@ -756,7 +764,8 @@ export default function Canvas() {
                             stroke={diamond.strokeColor}
                             strokeWidth={diamond.strokeWidth}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {images.map((img) => (
@@ -768,7 +777,8 @@ export default function Canvas() {
                             width={img.width}
                             height={img.height}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                         />
                     ))}
                     {lasers.map((laser) => (
@@ -789,7 +799,8 @@ export default function Canvas() {
                             x={text.x}
                             y={text.y}
                             draggable={isDraggable}
-                            onClick={handleClick}
+                            onTouchStart={handleRotateAndDragDrop}
+                            onClick={handleRotateAndDragDrop}
                             height={text.height}
                             width={text.width}
                             fontSize={text.fontSize}

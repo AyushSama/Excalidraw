@@ -12,7 +12,7 @@ import { ReactComponent as Plus } from '../Logo/Dropdown/gift.svg';
 import { ReactComponent as Github } from '../Logo/Dropdown/github.svg';
 import { ReactComponent as Twitter } from '../Logo/Dropdown/twitter-x.svg';
 import { ReactComponent as Discord } from '../Logo/Dropdown/discord.svg';
-import { ReactComponent as DarkMode } from '../Logo/Dropdown/moon.svg';
+// import { ReactComponent as DarkMode } from '../Logo/Dropdown/moon.svg';
 import { useToolboxContext } from '../Context/ToolboxContext';
 
 function Dropdown(props) {
